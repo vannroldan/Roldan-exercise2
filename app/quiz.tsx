@@ -1,19 +1,19 @@
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import { Pressable, Text, View } from "react-native";
-import questions from "./questions";
+import { questions } from "./questions";
 
 export default function Quiz() {
   const [index, setIndex] = useState(0);
-  const [answers, setAnswers] = useState<number[]>([]);
+  const [answers, setAnswers] = useState<string[]>([]);
   const router = useRouter();
 
   const question = questions[index];
   if (!question) return null; // safety guard
 
-  const selectAnswer = (optionIndex: number) => {
+  const selectAnswer = (choiceKey: string) => {
     const updated = [...answers];
-    updated[index] = optionIndex;
+    updated[index] = choiceKey;
     setAnswers(updated);
   };
 
@@ -25,7 +25,7 @@ export default function Quiz() {
     } else {
       const score = answers.reduce(
         (total, ans, i) =>
-          ans === questions[i].correctAnswer ? total + 1 : total,
+          ans === questions[i].answer ? total + 1 : total,
         0
       );
 
@@ -35,6 +35,8 @@ export default function Quiz() {
       });
     }
   };
+
+  const choiceEntries = Object.entries(question.choices);
 
   return (
     <View style={{ flex: 1, padding: 20 }}>
@@ -49,18 +51,20 @@ export default function Quiz() {
       </Text>
 
       {/* Options */}
-      {question.options.map((opt, i) => (
+      {choiceEntries.map(([key, value]) => (
         <Pressable
-          key={i}
-          onPress={() => selectAnswer(i)}
+          key={key}
+          onPress={() => selectAnswer(key)}
           style={{
             padding: 12,
             marginTop: 10,
-            backgroundColor: answers[index] === i ? "#ddd" : "#eee",
+            backgroundColor: answers[index] === key ? "#007AFF" : "#eee",
             borderRadius: 6,
           }}
         >
-          <Text>{opt}</Text>
+          <Text style={{ color: answers[index] === key ? "white" : "black" }}>
+            {key}. {value}
+          </Text>
         </Pressable>
       ))}
 
