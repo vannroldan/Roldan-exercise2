@@ -1,5 +1,5 @@
-import { View, Text, Pressable } from "react-native";
-import { useLocalSearchParams, router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
+import { Pressable, Text, View } from "react-native";
 
 export default function Results() {
   const { score } = useLocalSearchParams();
